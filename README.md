@@ -43,4 +43,47 @@ The core script implements the following workflow:
      - `subsample=0.9`, `colsample_bytree=0.9`
      - `tree_method="hist"`, `n_jobs=-1`
    - Handle class imbalance with `scale_pos_weight = #neg / #pos` computed from the training set.
-   - Train on `X_trai_
+   - Train on `X_train_sel`, evaluate on `X_val_sel`:
+     - Metrics: **ROC-AUC**, **PR-AUC**, **F1-score**.
+     - Scan thresholds from 0.0 to 1.0 to find the best F1 (also keep a fixed low threshold for comparison).
+     - Print classification report and confusion matrix on the validation set.
+
+5. **5-Fold Ensemble (Blending)**
+   - Use `StratifiedKFold(n_splits=5, shuffle=True, random_state=42)` on the **original training rows** but only with the selected 10 features.
+   - For each fold:
+     - Re-fit a new median imputer on the **fold’s training subset**.
+     - Impute the fold’s validation data and the global test data.
+     - Recompute `scale_pos_weight` on that fold’s train labels.
+     - Train a new XGBoost model with the same hyper-parameters.
+     - Evaluate ROC-AUC and PR-AUC on the fold’s validation set.
+     - Predict probabilities on the test set and add them to a running sum.
+   - Average the predictions from all 5 folds to obtain a **blended test probability** for each sample.
+
+6. **Thresholding and Submission File**
+   - Two options to convert probabilities to labels:
+     - **Fixed threshold** (e.g., `THRESHOLD = 0.008`).
+     - **Dynamic top-k threshold** to match an expected number of positive cases (optional).
+   - Generate final predictions `y_test_pred` (0 / 1).
+   - If the test data has an `ID` column, reuse it; otherwise create `ID = 0 ... n-1`.
+   - Save results to `submission.csv`:
+
+     ```text
+     ID,Label
+     0,0
+     1,1
+     ...
+     ```
+
+---
+
+## How to Run
+
+1. Prepare the input files in the project root:
+   - `train.xlsx` (must contain a column named `崩塌` as the label).
+   - `test.xlsx` (same feature columns as `train.xlsx`, but no label).
+
+2. Install dependencies (example):
+
+   ```bash
+   pip install numpy pandas scikit-learn xgboost openpyxl
+   
