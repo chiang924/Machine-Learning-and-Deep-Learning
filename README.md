@@ -1,15 +1,12 @@
 # Machine-Learning-and-Deep-Learning
 Using machine learning and deep learning to process large-scale data, optimize and find the best parameters, and predict data beyond the labeled samples.
-# Machine-Learning-and-Deep-Learning
-
-This repository contains my coursework and experiments for the **Machine Learning and Deep Learning** class, including homework notebooks and a complete **landslide (collapse) prediction pipeline** based on tree models.
 
 ---
 
 ## Project Structure
 
 - `Collapse_Prediction/`  
-  End-to-end pipeline for binary landslide prediction using Random Forest and XGBoost.
+  End-to-end pipeline for binary landslide prediction using Random Forest and XGBoost and CATBoost.
 - `HW2/`, `HW3/`, `HW4/`  
   Jupyter notebooks and scripts for other course assignments.
 - `README.md`  
