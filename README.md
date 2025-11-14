@@ -24,6 +24,9 @@ The core script implements the following workflow:
    - Read `train.xlsx` and `test.xlsx` with `pandas`.
    - Use the column `崩塌` in `train.xlsx` as the binary target label (0 / 1).
    - All remaining numeric columns are treated as candidate features.
+   - <div align="center">
+  <img src="collapse.png" width="420" alt="Map 1">
+</div>
 
 2. **Train/Validation Split and Imputation**
    - Split the training data into **80% train / 20% validation** with stratified sampling to keep the class ratio.
